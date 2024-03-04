@@ -79,9 +79,13 @@ impl<B: BufMut> MaybeFlip<B> {
     def_method!(put_u128, u128);
 
     fn put_slice(&mut self, src: &[u8]) {
-        for &val in src {
-            let val = if self.flip { !val } else { val };
-            self.output.put_u8(val);
+        if self.flip {
+            for &val in src {
+                let val = !val;
+                self.output.put_u8(val);
+            }
+        } else {
+            self.output.put_slice(src);
         }
     }
 
